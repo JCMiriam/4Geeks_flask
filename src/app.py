@@ -1,3 +1,4 @@
+import requests
 import pickle
 import pandas as pd
 import json
@@ -6,10 +7,25 @@ from flask import Flask, request, render_template, jsonify, send_from_directory
 from rapidfuzz.fuzz import ratio
 from rapidfuzz import process
 
-with open("https://drive.google.com/file/d/1DPXpcXTQXOiH0LneeStjWTVeKivPHGX3/view?usp=sharing", "rb") as f:
+def download_file_from_google_drive(url, destination):
+    file_id = url.split('/d/')[1].split('/')[0]
+    download_url = f"https://drive.google.com/uc?id={file_id}&export=download"
+    
+    response = requests.get(download_url, stream=True)
+    if response.status_code == 200:
+        with open(destination, "wb") as f:
+            for chunk in response.iter_content(1024):
+                f.write(chunk)
+    else:
+        raise ValueError(f"No se pudo descargar el archivo desde {url}")
+
+download_file_from_google_drive("https://drive.google.com/file/d/1DPXpcXTQXOiH0LneeStjWTVeKivPHGX3/view?usp=sharing", "knn_model.pkl")
+download_file_from_google_drive("https://drive.google.com/file/d/1fNePvWCvxMoaD6QaZvBzIOTE7QUoQmmm/view?usp=sharing", "similarity_model.pkl")
+
+with open("knn_model.pkl", "rb") as f:
     knn = pickle.load(f)
 
-with open("https://drive.google.com/file/d/1fNePvWCvxMoaD6QaZvBzIOTE7QUoQmmm/view?usp=sharing", "rb") as f:
+with open("similarity_model.pkl", "rb") as f:
     similarity = pickle.load(f)
 
 movies_df = pd.read_csv('../data/raw/tmdb_5000_movies.csv')
