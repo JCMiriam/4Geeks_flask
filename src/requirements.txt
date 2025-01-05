@@ -8,6 +8,7 @@ pandas>=1.5.3
 psycopg2-binary>=2.9.3
 pymysql>=1.0.2
 python-dotenv>=0.20.0
+rapidfuzz==3.1.1
 requests>=2.27.1
 scikit-learn
 seaborn>=0.12.2
