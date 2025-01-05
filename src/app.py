@@ -1,47 +1,41 @@
-import requests
 import pickle
 import pandas as pd
 import json
+import os
+import gzip
+
+from sklearn.neighbors import NearestNeighbors
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 from flask import Flask, request, render_template, jsonify, send_from_directory
 from rapidfuzz.fuzz import ratio
 from rapidfuzz import process
 
-knn_url = "https://drive.google.com/uc?id=1DPXpcXTQXOiH0LneeStjWTVeKivPHGX3"
-similarity_url = "https://drive.google.com/uc?id=1fNePvWCvxMoaD6QaZvBzIOTE7QUoQmmm"
-
-def download_model(url, filename):
-    response = requests.get(url)
-    if response.status_code != 200:
-        raise Exception(f"Error on download file: {response.status_code}")
-    
-    if response.text.startswith("<html>"):
-        raise Exception("HTML file downloaded, posible error on the URL.")
-    
-    with open(filename, 'wb') as f:
-        f.write(response.content)
-
-download_model(knn_url, "knn_model.pkl")
-download_model(similarity_url, "similarity_model.pkl")
-
-with open("knn_model.pkl", "rb") as f:
-    knn = pickle.load(f)
-
-with open("similarity_model.pkl", "rb") as f:
-    similarity = pickle.load(f)
-
+# Load data
 movies_df = pd.read_csv('../data/raw/tmdb_5000_movies.csv')
 processed_movies_df = pd.read_csv("../data/processed/processed_movies.csv")
 
-app = Flask(__name__)
+# Function to load compressed files
+def load_compressed_model(filepath):
+    with gzip.open(filepath, 'rb') as f:
+        model = pickle.load(f)
+    return model
 
+# Load model and matrix
+compressed_knn_path = "../models/knn_model.pkl.gz"
+compressed_similarity_path = "../models/similarity_matrix.pkl.gz"
+
+knn_model = load_compressed_model(compressed_knn_path)
+similarity = load_compressed_model(compressed_similarity_path)
+
+# Recommend functions
 def get_movie_info_by_id(movie_id):
     movie_row = movies_df[movies_df["id"] == movie_id]
     if movie_row.empty:
         return None
     
     movie_data = movie_row.iloc[0]
-
     genres = json.loads(movie_data["genres"])
     genres_list = [genre["name"] for genre in genres]
 
@@ -106,6 +100,8 @@ def recommend(movie_title, n_recommendations=5):
     
     return recommendations
 
+app = Flask(__name__)
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     movie_info = None
@@ -126,7 +122,4 @@ def serve_js(filename):
     return send_from_directory('static/js', filename, mimetype='application/javascript')
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-if __name__ == "__main__":
     app.run(debug=True)
