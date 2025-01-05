@@ -1,0 +1,14 @@
+<div class="liked-film__container">
+    {% if movie_info %}
+        <div class="liked-film__head">
+            <span class="liked-film__text">If you liked</span>
+            <h2 class="liked-film__title">{{ movie_info.title }}</h2>
+        </div>
+        <p class="liked-film__overview">{{ movie_info.overview }}</p>
+    {% elif movie_info is not none %}
+    <div class="error">
+        <p>Upps... It looks like the movie that you are looking for is not in our database...</p>
+        <h4>Please try it with another one!</h4>
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,22 @@
+.home__title {
+    color: var(--color-white);
+    text-shadow: var(--boxshadow-float);
+    position: relative;
+    z-index: 99;
+}
+
+.home__content {
+    display: flex;
+    gap: 40px;
+    margin-top: -76px;
+}
+
+.home__title--pretitle { 
+    font-size: 24px;
+    font-weight: 400;
+}
+.home__title--title { font-size: 40px; }
+
+.home__form {
+    flex-grow: 1;
+}

@@ -1,0 +1,45 @@
+<div class="recommendations__container">
+    {% if recommendations %}
+        <h2 class="recommendations__title">We recommend you</h2>
+        <div class="recommendations__content">
+        {% for movie in recommendations %}
+            <div class="recommendations__card">
+                <img src="../../static/images/genres/{{ movie.genres.split(', ')[0]|lower|replace(' ', '-') }}.png">
+                <div class="recommendations__card--content">
+                    <div class="recommendations__card--head">
+                        <h3 class="recommendations__card--title">{{ movie.title }}</h3>
+                        <span class="recommendations__card--date">({{ movie.release_date[:4] }})</span>
+                    </div>
+                    
+                    <div class="recommendations__card--genres">
+                        {% for genre in movie.genres.split(", ") %}
+                            <span class="recommendations__card--genre">{{ genre }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <p class="recommendations__card--overview">{{ movie.overview }}</p>
+
+                    <div class="recommendations__card--data">
+                        <span class="recommendations__card--data-item">
+                            <i class="fa-regular fa-star"></i>
+                            {{ movie.vote_average }}
+                        </span>
+                        <span class="recommendations__card--data-item">
+                            <i class="fa-regular fa-clock"></i>
+                            {{ movie.runtime }} m
+                        </span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+    <div class="error">
+        <i class="fa-solid fa-heart-crack"></i>
+        <div class="error__text">
+            <p>Upps... It looks like the movie that you are looking for is not in our database...</p>
+            <h4>Please try it with another one!</h4>
+        </div>
+    </div>
+    {% endif %}
+</div>

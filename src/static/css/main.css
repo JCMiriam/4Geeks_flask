@@ -1,0 +1,45 @@
+@import url('./carousel.css');
+@import url('./fimlData.css');
+@import url('./form.css');
+@import url('./home.css');
+@import url('./recommendations.css');
+@import url('./stylesReset.css');
+@import url('./variables.css');
+
+/* Base Styles */
+body {
+    width: 100vw;
+    height: 100vh;
+    background: var(--background-gradient-color);
+    font-family:'Roboto+Mono', sans-serif;
+    display: flex;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    margin: auto;
+}
+
+.error {
+    color: var(--color-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.error i {
+    font-size: 64px;
+    color: var(--color-accent-pink);
+}
+
+.error p {
+    font-size: 24px;
+    color: var(--color-light-grey)
+}
+
+.error h4 {
+    font-size: 36px;
+}

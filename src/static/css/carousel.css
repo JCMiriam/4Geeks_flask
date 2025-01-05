@@ -1,0 +1,41 @@
+.carousel-container {
+  width: 600px;
+  overflow: hidden;
+  position: relative;
+}
+
+.carousel {
+  display: flex;
+  gap: 8px;
+  transition: transform 0.5s ease-in-out;
+  width: calc(600px * 11);
+}
+
+.slide {
+  flex: 0 0 600px;
+  height: 338px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.3;
+  transition: opacity 0.5s ease-in-out;
+  transform: scale(0.9);
+}
+
+.slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.slide.adjacent {
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+.slide img {
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 16px;
+}

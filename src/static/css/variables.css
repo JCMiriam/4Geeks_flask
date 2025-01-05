@@ -1,0 +1,12 @@
+:root {
+    --color-white: #FFFFFF;
+    --color-light-grey: #DBDBDB;
+    --color-mid-grey: #6F6F6F;
+    --color-dark-grey: #343434;
+    --color-dark: #080808;
+    --color-accent-pink: #CA3678;
+    
+    --background-gradient-color: linear-gradient(347deg, rgba(18,18,18,1) 35%, rgba(38,38,38,1) 71%);
+
+    --boxshadow-float: 0 4px 12px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
+}
