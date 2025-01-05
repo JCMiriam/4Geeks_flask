@@ -10,22 +10,24 @@ from rapidfuzz import process
 knn_url = "https://drive.google.com/uc?id=1DPXpcXTQXOiH0LneeStjWTVeKivPHGX3"
 similarity_url = "https://drive.google.com/uc?id=1fNePvWCvxMoaD6QaZvBzIOTE7QUoQmmm"
 
-knn_file = "knn_model.pkl"
-similarity_file = "similarity_model.pkl"
-
 def download_model(url, filename):
     response = requests.get(url)
-    response.raise_for_status()
+    if response.status_code != 200:
+        raise Exception(f"Error on download file: {response.status_code}")
+    
+    if response.text.startswith("<html>"):
+        raise Exception("HTML file downloaded, posible error on the URL.")
+    
     with open(filename, 'wb') as f:
         f.write(response.content)
 
-download_model(knn_url, knn_file)
-download_model(similarity_url, similarity_file)
+download_model(knn_url, "knn_model.pkl")
+download_model(similarity_url, "similarity_model.pkl")
 
-with open(knn_file, "rb") as f:
+with open("knn_model.pkl", "rb") as f:
     knn = pickle.load(f)
 
-with open(similarity_file, "rb") as f:
+with open("similarity_model.pkl", "rb") as f:
     similarity = pickle.load(f)
 
 movies_df = pd.read_csv('../data/raw/tmdb_5000_movies.csv')
