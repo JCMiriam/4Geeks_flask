@@ -6,10 +6,10 @@ from flask import Flask, request, render_template, jsonify, send_from_directory
 from rapidfuzz.fuzz import ratio
 from rapidfuzz import process
 
-with open("../models/knn_model.pkl", "rb") as f:
+with open("https://drive.google.com/file/d/1DPXpcXTQXOiH0LneeStjWTVeKivPHGX3/view?usp=sharing", "rb") as f:
     knn = pickle.load(f)
 
-with open("../models/similarity_matrix.pkl", "rb") as f:
+with open("https://drive.google.com/file/d/1fNePvWCvxMoaD6QaZvBzIOTE7QUoQmmm/view?usp=sharing", "rb") as f:
     similarity = pickle.load(f)
 
 movies_df = pd.read_csv('../data/raw/tmdb_5000_movies.csv')
