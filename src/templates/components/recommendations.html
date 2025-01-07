@@ -3,34 +3,47 @@
         <h2 class="recommendations__title">We recommend you</h2>
         <div class="recommendations__content">
         {% for movie in recommendations %}
-            <div class="recommendations__card">
-                <img src="../../static/images/genres/{{ movie.genres.split(', ')[0]|lower|replace(' ', '-') }}.png">
-                <div class="recommendations__card--content">
-                    <div class="recommendations__card--head">
-                        <h3 class="recommendations__card--title">{{ movie.title }}</h3>
-                        <span class="recommendations__card--date">({{ movie.release_date[:4] }})</span>
+            {% if movie.poster_url %}
+                <div class="recommendations__card">
+                    <div class="recommendations__card--image">
+                        <img src="{{movie.poster_url}}">
                     </div>
-                    
-                    <div class="recommendations__card--genres">
-                        {% for genre in movie.genres.split(", ") %}
-                            <span class="recommendations__card--genre">{{ genre }}</span>
-                        {% endfor %}
-                    </div>
+                    <div class="recommendations__card--content">
+                        <div class="recommendations__card--head">
+                            <h3 class="recommendations__card--title">{{ movie.title }}</h3>
+                            <span class="recommendations__card--date">
+                                {% if movie.release_date %}
+                                    ({{ movie.release_date[:4] }})
+                                {% else %}{% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="recommendations__card--genres">
+                            {% if movie.genres %}
+                                {% for genre in movie.genres.split(", ") %}
+                                    <span class="recommendations__card--genre">{{ genre }}</span>
+                                {% endfor %}
+                            {% else %}{% endif %}
+                        </div>
 
-                    <p class="recommendations__card--overview">{{ movie.overview }}</p>
+                        <div class="recommendations__card--movie-data">
+                            <p class="recommendations__card--overview">{{ movie.overview }}</p>
 
-                    <div class="recommendations__card--data">
-                        <span class="recommendations__card--data-item">
-                            <i class="fa-regular fa-star"></i>
-                            {{ movie.vote_average }}
-                        </span>
-                        <span class="recommendations__card--data-item">
-                            <i class="fa-regular fa-clock"></i>
-                            {{ movie.runtime }} m
-                        </span>
+                            <div class="recommendations__card--data">
+                                <span class="recommendations__card--data-item">
+                                    <i class="fa-regular fa-star"></i>
+                                    {{ movie.vote_average }}
+                                </span>
+                                <span class="recommendations__card--data-item">
+                                    <i class="fa-regular fa-clock"></i>
+                                    {{ movie.runtime }} m
+                                </span>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
-            </div>
+            {% else %}{% endif %}
         {% endfor %}
         </div>
     {% else %}

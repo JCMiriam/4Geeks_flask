@@ -9,24 +9,31 @@
 
 .recommendations__content {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
 }
 
 .recommendations__card {
     overflow: hidden;
     border-radius: 16px;
     box-shadow: var(--boxshadow-float);
+    display: flex;
+}
+
+.recommendations__card--image {
+    min-width: 184px;
+}
+
+.recommendations__card--image img {
+    min-height: 100%;
 }
 
 .recommendations__card--content {
-    position: relative;
     height: 100%;
     background-color: var(--color-white);
-    border-radius: 0 16px 16px 16px;
-    margin-top: -16px;
     padding: 16px;
-    z-index: 9;
+    display: flex;
+    flex-direction: column;
 }
 
 .recommendations__card--head {
@@ -58,6 +65,13 @@
     border-radius: 16px;
     font-size: 12px;
     background-color: var(--color-light-grey);
+}
+
+.recommendations__card--movie-data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
 }
 
 .recommendations__card--overview {

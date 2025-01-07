@@ -1,51 +1,45 @@
-import pickle
-import pandas as pd
 import json
-import os
-import gzip
+import pandas as pd
 
-from sklearn.neighbors import NearestNeighbors
+from flask import Flask, request, render_template, send_from_directory
+from rapidfuzz.fuzz import ratio
+from rapidfuzz import process
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from flask import Flask, request, render_template, jsonify, send_from_directory
-from rapidfuzz.fuzz import ratio
-from rapidfuzz import process
+app = Flask(__name__)
 
-# Load data
-movies_df = pd.read_csv('../data/raw/tmdb_5000_movies.csv')
+# Load datasets 
+movies_df = pd.read_csv('../data/raw/movies_data.csv')
 processed_movies_df = pd.read_csv("../data/processed/processed_movies.csv")
 
-# Function to load compressed files
-def load_compressed_model(filepath):
-    with gzip.open(filepath, 'rb') as f:
-        model = pickle.load(f)
-    return model
-
-# Load model and matrix
-compressed_knn_path = "../models/knn_model.pkl.gz"
-compressed_similarity_path = "../models/similarity_matrix.pkl.gz"
-
-knn_model = load_compressed_model(compressed_knn_path)
-similarity = load_compressed_model(compressed_similarity_path)
+# Generate models
+vec_model = CountVectorizer(max_features=5000, stop_words="english")
+vectors = vec_model.fit_transform(processed_movies_df["tags"])
+similarity = cosine_similarity(vectors)
 
 # Recommend functions
 def get_movie_info_by_id(movie_id):
     movie_row = movies_df[movies_df["id"] == movie_id]
     if movie_row.empty:
         return None
-    
+
     movie_data = movie_row.iloc[0]
     genres = json.loads(movie_data["genres"])
     genres_list = [genre["name"] for genre in genres]
+
+    print('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE')
+    print(", ".join(genres_list))
+    
 
     return {
         "title": movie_data["title"],
         "genres": ", ".join(genres_list),
         "overview": movie_data["overview"],
-        "release_date": movie_data["release_date"],
+        "release_date": movie_data.get("release_date", "Unknown release date"),
         "vote_average": movie_data["vote_average"],
-        "runtime": movie_data.get("runtime", "No disponible"),
+        "runtime": movie_data.get("runtime", "Not available"),
+        "poster_url": movie_data["poster"],
     }
 
 def get_movie_info_by_title(title):
@@ -65,15 +59,20 @@ def get_movie_info_by_title(title):
     movie_data = movie_row.iloc[0]
     genres = json.loads(movie_data["genres"])
     genres_list = [genre["name"] for genre in genres]
+
+    print('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE')
+    print(", ".join(genres_list))
     
     return {
         "title": movie_data["title"],
         "genres": ", ".join(genres_list),
         "overview": movie_data["overview"],
-        "release_date": movie_data["release_date"],
+        "release_date": movie_data.get("release_date", "Unknown release date"),
         "vote_average": movie_data["vote_average"],
-        "runtime": movie_data.get("runtime", "No disponible"),
+        "runtime": movie_data.get("runtime", "Not available"),
+        "poster_url": movie_data["poster"],
     }
+
 
 def recommend(movie_title, n_recommendations=5):
     best_match = process.extractOne(
@@ -84,7 +83,7 @@ def recommend(movie_title, n_recommendations=5):
     )
 
     if not best_match:
-        return [{"error": "No se encontró una película similar en la base de datos."}]
+        return [{"error": "Not movie found in the database"}]
 
     best_title = best_match[0]
     movie_index = processed_movies_df[processed_movies_df["title"] == best_title].index[0]
@@ -100,7 +99,6 @@ def recommend(movie_title, n_recommendations=5):
     
     return recommendations
 
-app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def index():

@@ -9,8 +9,8 @@
 /* Base Styles */
 body {
     width: 100vw;
-    height: 100vh;
-    background: var(--background-gradient-color);
+    min-height: 100vh;
+    background: var(--background-color);
     font-family:'Roboto+Mono', sans-serif;
     display: flex;
 }
@@ -19,7 +19,7 @@ body {
     width: 100%;
     max-width: 1200px;
     padding: 20px;
-    margin: auto;
+    margin: 60px auto;
 }
 
 .error {
